@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:places_finder/api/coffee_shops_api.dart';
 import 'package:places_finder/api/my_location_api.dart';
+import 'package:places_finder/api/place_details_api.dart';
 import 'package:places_finder/api/places_prediction_api.dart';
 import 'package:places_finder/models/coffe_shops_data.dart';
 import 'package:places_finder/models/my_location.dart';
 import 'package:places_finder/models/place_prediction.dart';
+import 'package:places_finder/repository/place_details_repository.dart';
 import 'package:places_finder/repository/places_prediction_repository.dart';
 import 'package:places_finder/ui/coffee_card.dart';
 
@@ -23,6 +25,7 @@ class MyMapPage extends StatefulWidget {
 class _MyMapPageState extends State<MyMapPage> {
 
   PlacesPredictionRepository repository;
+  PlaceDetailsRepository detailsRepository;
   GoogleMapController googleMapController;
   MyLocationData _myLocationData;
   CoffeeShopsData _shops;
@@ -112,6 +115,8 @@ class _MyMapPageState extends State<MyMapPage> {
 
     repository =
         PlacesPredictionRepository(PlacesPredictionApi.getInstance());
+    detailsRepository =
+        PlaceDetailsRepository(PlaceDetailsApi.getInstance());
   }
 
   void _onMapCreated(GoogleMapController controller) async{
@@ -153,7 +158,8 @@ class _MyMapPageState extends State<MyMapPage> {
              child: _selectedMarker != null ? CoffeeCard(
                shopImage: _shopImage,
                shopName: _shopName,
-               repository: repository,
+               repository: repository, detailsRepository: detailsRepository,
+
              ) : Container(),
             alignment: Alignment.bottomCenter,
           )

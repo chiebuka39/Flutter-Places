@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:places_finder/models/place_prediction.dart';
+import 'package:places_finder/repository/place_details_repository.dart';
+import 'package:places_finder/ui/place_details_ui.dart';
 
 class SearchResults extends StatelessWidget {
   final List<PredictedPlace> items;
+  final PlaceDetailsRepository repository;
 
-  const SearchResults({Key key, this.items}) : super(key: key);
+
+  const SearchResults({Key key, this.items, this.repository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        return _SearchResultItem(item: items[index]);
+        return _SearchResultItem(item: items[index], repository: repository,);
       },
     );
   }
@@ -20,8 +24,9 @@ class SearchResults extends StatelessWidget {
 
 class _SearchResultItem extends StatelessWidget {
   final PredictedPlace item;
+  final PlaceDetailsRepository repository;
 
-  const _SearchResultItem({Key key, @required this.item}) : super(key: key);
+  const _SearchResultItem({Key key, @required this.item, this.repository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,13 @@ class _SearchResultItem extends StatelessWidget {
       ),
       title: Text(item.description),
       onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PlacesDetailsMap(
+            detailsRepository:repository,
+            placeId: item.placeId,
+          )),
+        );
         print(item.description);
       },
     );
